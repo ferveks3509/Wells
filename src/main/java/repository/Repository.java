@@ -153,10 +153,4 @@ public class Repository implements AutoCloseable {
             connection.close();
         }
     }
-
-    public static void main(String[] args) throws SQLException, IOException {
-        Repository repository = new Repository();
-        repository.init();
-        System.out.println(repository.findMinId());
-    }
 }
