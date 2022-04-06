@@ -132,9 +132,31 @@ public class Repository implements AutoCloseable {
         return rsl;
     }
 
+    public Equipment findMinId() throws SQLException {
+        Equipment equipment = new Equipment(1, "name", 1);
+        try(PreparedStatement ps = connection.prepareStatement("select equipment.id, equipment.name, equipment.well_id, max(equipment.id) from equipment")) {
+            try(ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    equipment.setId(rs.getInt("id"));
+                    equipment.setName(rs.getString("name"));
+                    equipment.setWell_id(rs.getInt("well_id"));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return equipment;
+    }
+
     public void close() throws SQLException {
         if (connection != null) {
             connection.close();
         }
+    }
+
+    public static void main(String[] args) throws SQLException, IOException {
+        Repository repository = new Repository();
+        repository.init();
+        System.out.println(repository.findMinId());
     }
 }

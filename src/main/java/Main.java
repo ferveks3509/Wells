@@ -21,8 +21,6 @@ import java.util.Scanner;
 
 public class Main {
 
-    private int count = 0;
-
     public void init(Scanner scanner, Repository repository) throws IOException, TransformerException, ParserConfigurationException, SQLException {
         boolean run = true;
         while (run) {
@@ -36,7 +34,7 @@ public class Main {
                 String name = scanner.nextLine();
                 Well well = findWellOrCreate(name, repository);
                 while (value != 0) {
-                    repository.createEquipment(new Equipment(nameEquipment(), well.getId()));
+                    repository.createEquipment(new Equipment(nameEquipment(repository), well.getId()));
                     value--;
                 }
             } else if (select == 2) {
@@ -89,9 +87,9 @@ public class Main {
         t.transform(new DOMSource(document), new StreamResult(new FileOutputStream("./" + name + ".xml")));
     }
 
-    private String nameEquipment() {
+    private String nameEquipment(Repository repository) throws SQLException {
+        int count = repository.findMinId().getId();
         String name = "EQ" + count;
-        count++;
         return name;
     }
 
@@ -118,9 +116,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, SQLException {
-          Scanner scanner = new Scanner(System.in);
-          Repository repository = new Repository();
-          new Main().init(scanner, repository);
-
+        Scanner scanner = new Scanner(System.in);
+        Repository repository = new Repository();
+        new Main().init(scanner, repository);
     }
 }
