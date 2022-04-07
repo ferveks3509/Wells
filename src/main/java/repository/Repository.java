@@ -73,11 +73,18 @@ public class Repository implements AutoCloseable {
     }
 
     public List<WellsEQ> findAllWellsAndCountEquipments(String[] names) {
+        int size = names.length;
+        StringBuilder st = new StringBuilder();
+        while (size > 0) {
+            st.append("?,");
+            size--;
+        }
+        st.deleteCharAt(st.length() - 1);
         List<WellsEQ> wells = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement
                 ("select well.name, count(e.id) as equipments " +
                         "from well left join equipment e on well.id = e.well_id " +
-                        "where well.name in(?,?,?)" +
+                        "where well.name in(" + st.toString() + ")" +
                         "group by well.name;")) {
             ps.setString(1, names[0]);
             ps.setString(2, names[1]);

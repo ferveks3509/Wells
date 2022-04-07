@@ -38,7 +38,7 @@ public class Main {
                     value--;
                 }
             } else if (select == 2) {
-                System.out.println("Укажите 3 имени скважин через пробел:");
+                System.out.println("Укажите минимум 3 скважин через пробел:");
                 String input = scanner.nextLine();
                 String[] namesWells = input.split(" ");
                 repository.init();
